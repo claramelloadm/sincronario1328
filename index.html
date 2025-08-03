@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sincronário - Imagem do Dia da Lua</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: #f3f4f6;
+      }
+      .img-dia {
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex flex-col items-center justify-center">
+    <div
+      class="w-full max-w-md mx-auto p-4 bg-white rounded-2xl shadow-lg flex flex-col items-center mt-8"
+    >
+      <h1 class="text-xl font-bold mb-0 text-gray-1000 text-center">
+        Sincronário das 13 Luas de 28 dias
+      </h1>
+      <br />
+
+      <div
+        id="contaLonga"
+        class="text-xl font-bold mb-0 text-black-700 text-center"
+      ></div>
+
+      <div id="infoDia" class="mb-4 text-center"></div>
+      <img
+        id="imgDia"
+        src=""
+        alt="Imagem do Dia"
+        class="img-dia w-full max-w-sm h-auto mb-2 transition-all duration-500"
+      />
+
+      <p class="text-xs mt-4 text-gray-400">
+        Data Gregoriana: <span id="hoje"></span>
+      </p>
+      <div class="flex justify-center gap-2 w-full mt-2">
+        <button
+          onclick="anteriorDia()"
+          style="background: #188577"
+          class="text-white rounded px-4 py-2 font-bold shadow text-lg"
+        >
+          &lt;
+        </button>
+        <button
+          onclick="hojeDia()"
+          style="background: #188577"
+          class="text-white rounded px-6 py-2 font-bold shadow text-lg"
+        >
+          Hoje
+        </button>
+        <button
+          onclick="proximoDia()"
+          style="background: #188577"
+          class="text-white rounded px-4 py-2 font-bold shadow text-lg"
+        >
+          &gt;
+          <br />
+        </button>
+      </div>
+      <br />
+      <div class="flex flex-row gap-2 mb-3 w-full">
+        <input
+          id="inputData"
+          type="text"
+          placeholder="Insira uma data (DD/MM/AAAA)"
+          class="flex-1 px-2 py-1 border rounded text-sm"
+          onkeypress="if(event.key==='Enter'){calcularData();}"
+        />
+        <br />
+        <button
+          onclick="calcularData()"
+          class="bg-purple-600 text-white rounded px-3 py-1 font-bold text-sm"
+        >
+          Calcular
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const luas = [
+        { nome: "Lua Magnética do Morcego - A Lua do Propósito" },
+        { nome: "Lua Lunar do Escorpião - A Lua do Desafio" },
+        { nome: "Lua Elétrica do Veado - A Lua do Serviço" },
+        { nome: "Lua Autoexistente da Coruja - A Lua da Forma " },
+        { nome: "Lua Harmônica do Pavão - A Lua da Radiação" },
+        { nome: "Lua Rítmica do Lagarto - A Lua da Igualdade" },
+        { nome: "Lua Ressonante do Macaco - A Lua da Sintonização " },
+        { nome: "Lua Galáctica do Falcão - A Lua da Integridade" },
+        { nome: "Lua Solar do Jaguar - A Lua da Intenção " },
+        { nome: "Lua Planetária do Cachorro - A Lua da Manifestação" },
+        { nome: "Lua Espectral da Serpente - A Lua da Liberação" },
+        { nome: "Lua Cristal do Coelho - A Lua da Cooperação" },
+        { nome: "Lua Cósmica da Tartaruga - A Lua da Presença" },
+      ];
+      const imagensCiclo = [
+        "https://static.wixstatic.com/media/5d56c4_18a778d534b14328a14bdd5a6c7fe801~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_64bf47c90b854a7a9e05cda038b80ed0~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_bc65b53e899d422191336c7f4ae91982~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_c4f471629d254067ad95f8f80faae906~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_e6698c2bf14c4db39e089992529b9c0f~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_d20782fcb2a14a9fafb845e5af3be45b~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_da4f35ae734346c9ae054a55c736f386~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_4bbf365caae843e3b9a5e9631bbee519~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_2f280b18014148c281dd2dc72cf7f498~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_5b3ad5cc735a46e4819f6985d24e4501~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_77d41a8a45b64f9ca60b09019943ec0c~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_62df379580f0424190c2138bee128039~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_9cce4640ff8c43bb8dc8bee5caf00c09~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_4e2d1fe7f66e471ea5afe93e44b1a56e~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_9dd61433d03143ad97d69ff66e6227fe~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_b497cb3534ad4f9a93b94c1c7784f7ca~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_5b52cff22532457289c48d0ad87a518e~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_3d043a16af484fdc8b9e0e0e074c86cc~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_b203d50c194640cc91ec3452ca5918f6~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_4b6e0a407a494ab295842767fdf32f9c~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_6987127a56584ef2b8823f112080ad1e~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_dbcee2e36c4f4d508ad686b7320b8e70~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_2ec17e24656e4e1cab4a0b4875d1b0bc~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_06c12125b61c4523857fa677803360a0~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_0cb49c82675947848b15b1bde509eb4c~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_c3f545b6f41e43c397c8ef83f6a9f1fc~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_dfc6b18233d84506bc4cb9d76c933e7b~mv2.jpg",
+        "https://static.wixstatic.com/media/5d56c4_8b7d745e06e843e5b38ad46bb7d27786~mv2.jpg",
+      ];
+      // Especiais
+      const diaForaDoTempo = {
+        nome: "Dia Fora do Tempo",
+        img: "https://static.wixstatic.com/media/5d56c4_47b2325aa43f4992a34a7e3db0d14323~mv2.jpg",
+      };
+      const hunabKu21 = {
+        nome: "Hunab Ku 21",
+        img: "https://static.wixstatic.com/media/5d56c4_47b2325aa43f4992a34a7e3db0d14323~mv2.jpg",
+      };
+
+      // Conta longa dinâmica (Sincronário)
+      function gerarLuasFixas(anoBase) {
+        return [
+          { nome: "Lua 1", inicio: new Date(anoBase, 6, 26) },
+          { nome: "Lua 2", inicio: new Date(anoBase, 7, 23) },
+          { nome: "Lua 3", inicio: new Date(anoBase, 8, 20) },
+          { nome: "Lua 4", inicio: new Date(anoBase, 9, 18) },
+          { nome: "Lua 5", inicio: new Date(anoBase, 10, 15) },
+          { nome: "Lua 6", inicio: new Date(anoBase, 11, 13) },
+          { nome: "Lua 7", inicio: new Date(anoBase + 1, 0, 10) },
+          { nome: "Lua 8", inicio: new Date(anoBase + 1, 1, 7) },
+          { nome: "Lua 9", inicio: new Date(anoBase + 1, 2, 7) },
+          { nome: "Lua 10", inicio: new Date(anoBase + 1, 3, 4) },
+          { nome: "Lua 11", inicio: new Date(anoBase + 1, 4, 2) },
+          { nome: "Lua 12", inicio: new Date(anoBase + 1, 4, 30) },
+          { nome: "Lua 13", inicio: new Date(anoBase + 1, 5, 27) },
+        ];
+      }
+      function calcularDiaDaLuaEPlasma(dia, mes, ano) {
+        const anoBase = mes < 7 || (mes === 7 && dia < 26) ? ano - 1 : ano;
+        const luasFixas = gerarLuasFixas(anoBase);
+        const dataEntrada = new Date(ano, mes - 1, dia);
+        if (mes === 7 && dia === 25) {
+          return { diaDaLua: 365, numeroLua: null };
+        }
+        for (let i = 0; i < luasFixas.length; i++) {
+          const inicioLua = luasFixas[i].inicio;
+          const proximaLua =
+            i < luasFixas.length - 1
+              ? luasFixas[i + 1].inicio
+              : new Date(anoBase + 1, 6, 25);
+          if (dataEntrada >= inicioLua && dataEntrada < proximaLua) {
+            const diaNaLua =
+              Math.floor((dataEntrada - inicioLua) / (1000 * 60 * 60 * 24)) + 1;
+            return { diaDaLua: diaNaLua, numeroLua: i + 1 };
+          }
+        }
+        return { diaDaLua: null, numeroLua: null };
+      }
+      function calcularAnel(ano, mes, dia) {
+        const anoBase = 1987;
+        const anoAjustado = mes < 7 || (mes === 7 && dia < 26) ? ano - 1 : ano;
+        const anelAtual = (((anoAjustado - anoBase) % 52) + 52) % 52;
+        return anelAtual;
+      }
+      function calcularGiroSiriano(ano) {
+        const inicioNS0 = new Date(1987, 6, 26);
+        const anosDesde1987 = ano - inicioNS0.getFullYear();
+        const giroSiriano = Math.floor(anosDesde1987 / 52) + 1;
+        return giroSiriano;
+      }
+      function gerarContaLongaParaData(dt) {
+        const dia = dt.getDate();
+        const mes = dt.getMonth() + 1;
+        const ano = dt.getFullYear();
+        const resultado = calcularDiaDaLuaEPlasma(dia, mes, ano);
+        const anel = calcularAnel(ano, mes, dia);
+        const giroSiriano = calcularGiroSiriano(ano);
+        return mes === 7 && dia === 25
+          ? `NS${giroSiriano}.${anel}.365`
+          : `NS${giroSiriano}.${anel}.${resultado.numeroLua || 13}.${
+              resultado.diaDaLua
+            }`;
+      }
+
+      // --- Sincronário navegação ---
+      const datasInicio = [
+        "26/07",
+        "23/08",
+        "20/09",
+        "18/10",
+        "15/11",
+        "13/12",
+        "10/01",
+        "07/02",
+        "07/03",
+        "04/04",
+        "02/05",
+        "30/05",
+        "27/06",
+      ];
+      function strToDate(str, ano) {
+        let [dia, mes] = str.split("/").map(Number);
+        return new Date(ano, mes - 1, dia);
+      }
+      function getInfoDiaSincronario(data) {
+        let ano = data.getFullYear();
+        let foraDoTempo = data.getDate() === 25 && data.getMonth() === 6;
+        let hunabKu = data.getDate() === 29 && data.getMonth() === 1;
+        if (foraDoTempo) return { especial: "foraDoTempo" };
+        if (hunabKu) return { especial: "hunabKu21" };
+        for (let i = 0; i < datasInicio.length; i++) {
+          let dataIni = strToDate(datasInicio[i], ano);
+          let dataFim =
+            i === 12
+              ? strToDate("24/07", ano + 1)
+              : strToDate(datasInicio[(i + 1) % 13], ano);
+          if (i === 12 && data < dataIni)
+            dataIni = strToDate(datasInicio[i], ano - 1);
+          if (data >= dataIni && data < dataFim) {
+            let diaNaLua =
+              Math.floor((data - dataIni) / (1000 * 60 * 60 * 24)) + 1;
+            return { lua: i, diaNaLua, especial: null };
+          }
+        }
+        return { lua: null, diaNaLua: null, especial: null };
+      }
+      let dataAtual = new Date();
+      let dataHoje = new Date();
+      function render() {
+        let imgTag = document.getElementById("imgDia");
+        let infoTag = document.getElementById("infoDia");
+        let hojeTag = document.getElementById("hoje");
+        let hojeStr = dataAtual.toLocaleDateString("pt-BR");
+        hojeTag.textContent = hojeStr;
+        document.getElementById("contaLonga").textContent =
+          gerarContaLongaParaData(dataAtual);
+        const infoDia = getInfoDiaSincronario(dataAtual);
+        if (infoDia.especial === "foraDoTempo") {
+          imgTag.src =
+            diaForaDoTempo.img ||
+            "https://source.unsplash.com/random/400x400?sig=365";
+          infoTag.innerHTML = `<div class='font-bold text-lg text-blue-700'>${diaForaDoTempo.nome} (25/07)</div><div class='text-xs text-gray-600'>Imagem especial</div>`;
+        } else if (infoDia.especial === "hunabKu21") {
+          imgTag.src =
+            hunabKu21.img ||
+            "https://source.unsplash.com/random/400x400?sig=366";
+          infoTag.innerHTML = `<div class='font-bold text-lg text-green-700'>${hunabKu21.nome} (29/02)</div><div class='text-xs text-gray-600'>Imagem especial para ano bissexto</div>`;
+        } else if (infoDia.lua !== null) {
+          let nLua = infoDia.lua;
+          let nDia = infoDia.diaNaLua;
+          let lua = luas[nLua];
+          let imgLink =
+            imagensCiclo[nDia - 1] ||
+            `https://source.unsplash.com/random/400x400?sig=${nDia}`;
+          imgTag.src = imgLink;
+          let nomeLua = lua.nome;
+          infoTag.innerHTML = `<div class='text-base font-bold text-purple-700'>${nomeLua}</div><div class='text-sm text-gray-800 mb-1'>Dia <span class='font-semibold'>${nDia}</span> da Lua <span class='font-semibold'>${
+            nLua + 1
+          }</span></div>`;
+        } else {
+          imgTag.src = "";
+          infoTag.innerHTML = `<span class='text-red-700'>Dia fora do sincronário</span>`;
+        }
+      }
+      function proximoDia() {
+        dataAtual.setDate(dataAtual.getDate() + 1);
+        render();
+      }
+      function anteriorDia() {
+        dataAtual.setDate(dataAtual.getDate() - 1);
+        render();
+      }
+      function hojeDia() {
+        dataAtual = new Date(dataHoje);
+        render();
+      }
+      render();
+      function calcularData() {
+        const val = document.getElementById("inputData").value.trim();
+        const m = val.match(/^([0-9]{2})[\\/-]([0-9]{2})[\\/-]([0-9]{4})$/);
+        if (!m) {
+          alert("Por favor, insira a data no formato DD/MM/AAAA");
+          return;
+        }
+        const d = parseInt(m[1], 10);
+        const mth = parseInt(m[2], 10) - 1;
+        const y = parseInt(m[3], 10);
+        const data = new Date(y, mth, d);
+        if (isNaN(data)) {
+          alert("Data inválida!");
+          return;
+        }
+        dataAtual = data;
+        render();
+      }
+    </script>
+  </body>
+</html>
