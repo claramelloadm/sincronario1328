@@ -21,9 +21,6 @@
     <div
       class="w-full max-w-md mx-auto p-4 bg-white rounded-2xl shadow-lg flex flex-col items-center mt-8"
     >
-      <h1 class="text-xl font-bold mb-0 text-gray-1000 text-center">
-        Sincronário das 13 Luas de 28 dias
-      </h1>
       <br />
 
       <div
@@ -263,12 +260,12 @@
           imgTag.src =
             diaForaDoTempo.img ||
             "https://source.unsplash.com/random/400x400?sig=365";
-          infoTag.innerHTML = `<div class='font-bold text-lg text-blue-700'>${diaForaDoTempo.nome} (25/07)</div><div class='text-xs text-gray-600'>Dia Fora do Tempo</div>`;
+          infoTag.innerHTML = `<div class='font-bold text-lg text-blue-700'>${diaForaDoTempo.nome} (25/07)</div><div class='text-xs text-gray-600'>Imagem especial</div>`;
         } else if (infoDia.especial === "hunabKu21") {
           imgTag.src =
             hunabKu21.img ||
             "https://source.unsplash.com/random/400x400?sig=366";
-          infoTag.innerHTML = `<div class='font-bold text-lg text-green-700'>${hunabKu21.nome} (29/02)</div><div class='text-xs text-gray-600'>Dia HunabKu 21</div>`;
+          infoTag.innerHTML = `<div class='font-bold text-lg text-green-700'>${hunabKu21.nome} (29/02)</div><div class='text-xs text-gray-600'>Imagem especial para ano bissexto</div>`;
         } else if (infoDia.lua !== null) {
           let nLua = infoDia.lua;
           let nDia = infoDia.diaNaLua;
